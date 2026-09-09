@@ -1,0 +1,951 @@
+{
+  "name": "News_main",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 15,
+              "triggerAtMinute": 19
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "c66f695c-5ff9-4108-b049-e8860ad55000",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://www.gamespot.com/feeds/news/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c20b805b-63df-41ce-a98a-b54da8cdefe7",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemma-4-26b-a4b-it",
+          "mode": "list",
+          "cachedResultName": "models/gemma-4-26b-a4b-it"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Ты — главный редактор русскоязычного канала о компьютерных играх.\n\nТвоя задача:\n\n1. Определить, стоит ли публиковать новость.\n2. Если новость на английском языке — перевести её на русский.\n3. Подготовить естественный и понятный русский текст для публикации в соцсети.\n\nНам нужны действительно интересные новости для широкой аудитории игроков и посетителей компьютерного клуба.\n\nОСТАВЛЯЙ НОВОСТЬ, если это:\n\n* крупный анонс новой игры;\n* новая игра или продолжение известной серии;\n* важный трейлер или демонстрация геймплея;\n* дата выхода;\n* крупный релиз;\n* важная новость о популярной игре;\n* значимое событие вокруг GTA, Call of Duty, Battlefield, Minecraft, Fortnite, Counter-Strike, Dota 2, Valorant и других известных игр;\n* важная новость о Steam, PlayStation, Xbox, Nintendo или PC;\n* новое игровое железо;\n* покупка или закрытие известной игровой студии;\n* массовые увольнения разработчиков;\n* важная новость крупного издателя;\n* громкое событие игровой индустрии;\n* новость, которая может вызвать обсуждение среди игроков.\n\nОТКЛОНЯЙ:\n\n* мелкие патчи;\n* hotfix;\n* исправление нескольких багов;\n* небольшие балансные изменения;\n* новые скины;\n* косметические предметы;\n* обычные внутриигровые события;\n* небольшие технические изменения;\n* незначительные обновления;\n* новости, интересные только очень узкой аудитории;\n* рекламные материалы.\n\nГлавный вопрос:\n\n«Захочет ли обычный игрок узнать об этой новости и обсудить её?»\n\nОцени новость от 1 до 10.\n\n8–10 = KEEP\n1–7 = SKIP\n\nПРАВИЛА ПЕРЕВОДА И ОФОРМЛЕНИЯ:\n\n* Переводи английский заголовок и текст на естественный русский язык.\n* Не делай дословный машинный перевод.\n* Не придумывай факты.\n* Не меняй смысл новости.\n* Названия игр, компаний, студий, консолей и сервисов оставляй в официальном написании.\n* Сохраняй важные даты, цифры, цены, названия и факты.\n* Убирай рекламу, лишнюю воду, повторы и кликбейт.\n* `title_ru` должен быть одним естественным заголовком на русском языке.\n* `text_ru` должен быть готовым текстом поста для соцсети.\n* Не повторяй заголовок внутри `text_ru`.\n* Не пиши исходный английский заголовок перед русским переводом.\n* НЕ используй знак `=` внутри `title_ru` и `text_ru`.\n* НЕ используй конструкции вида «текст = текст», «заголовок = описание» или «оригинал = перевод».\n* НЕ соединяй две фразы знаком равенства.\n* Если хочется разделить две части мысли, используй точку, двоеточие или тире.\n* Не используй технические разделители вроде `=>`, `->` или `=`.\n* Текст должен выглядеть как обычный готовый пост, написанный человеком.\n\nПЛОХО:\n\nРазработчики рады, что анонс ремастера The Witcher 3 не утек в сеть = На Gamescom случился неожиданный сюрприз: анонсирован The Witcher 3 Remastered.\n\nХОРОШО:\n\nНа Gamescom неожиданно анонсировали The Witcher 3 Remastered. Разработчики признались, что особенно рады тому, что информация о проекте не утекла в сеть заранее.\n\nВерни ТОЛЬКО валидный JSON. Не используй Markdown и не добавляй никакой текст до или после JSON.\n\nФормат:\n\n{\n\"decision\": \"KEEP\",\n\"score\": 8,\n\"reason\": \"Краткая причина решения на русском языке\",\n\"title_ru\": \"Готовый заголовок на русском языке\",\n\"text_ru\": \"Готовый текст поста на русском языке\"\n}\n\nНовость:\n\nЗаголовок:\n{{ $json.title }}\n\nТекст:\n{{ $json.content_clean }}\n\nСсылка:\n{{ $json.link }}\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        0
+      ],
+      "id": "d084678c-8a73-44b7-b2bd-0f97b4332f44",
+      "name": "Message a model",
+      "retryOnFail": false,
+      "maxTries": 4,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EQbOypYH2p4ZIfcn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 10
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "f473e5d6-2a91-4cd1-85ac-0dcc8c5f2258",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab8e242f-f401-4b62-a7fd-7d9f00d37743",
+              "name": "score",
+              "value": "={{ (() => {\n  let t = $json.content.parts\n    .filter(p => p.text && p.thought !== true)\n    .at(-1).text\n    .replace(/^```json\\s*/i, '')\n    .replace(/^```\\s*/i, '')\n    .replace(/\\s*```$/i, '')\n    .trim();\n\n  let d = JSON.parse(t);\n  if (Array.isArray(d)) d = d[0];\n\n  return Number(d.score);\n})() }}",
+              "type": "number"
+            },
+            {
+              "id": "0eb2fb44-4c92-43c5-b7bc-ad04e3ab5d4f",
+              "name": "decision",
+              "value": "={{  (() => {   let t = $json.content.parts     .filter(p => p.text && p.thought !== true)     .at(-1).text     .replace(/^```json\\s*/i, '')     .replace(/^```\\s*/i, '')     .replace(/\\s*```$/i, '')     .trim();    let d = JSON.parse(t);   if (Array.isArray(d)) d = d[0];    return d.decision; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "6178708c-13ac-447e-84c0-25900564f68b",
+              "name": "title_ru",
+              "value": "={{  (() => {   let t = $json.content.parts     .filter(p => p.text && p.thought !== true)     .at(-1).text     .replace(/^```json\\s*/i, '')     .replace(/^```\\s*/i, '')     .replace(/\\s*```$/i, '')     .trim();    let d = JSON.parse(t);   if (Array.isArray(d)) d = d[0];    return d.title_ru; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "58414b47-ad43-45f2-b154-c4595577dab7",
+              "name": "text_ru",
+              "value": "={{  (() => {   let t = $json.content.parts     .filter(p => p.text && p.thought !== true)     .at(-1).text     .replace(/^```json\\s*/i, '')     .replace(/^```\\s*/i, '')     .replace(/\\s*```$/i, '')     .trim();    let d = JSON.parse(t);   if (Array.isArray(d)) d = d[0];    return d.text_ru; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "a31833d4-bcb1-49db-8d21-abc5da6f0c21",
+              "name": "reason",
+              "value": "={{  (() => {   let t = $json.content.parts     .filter(p => p.text && p.thought !== true)     .at(-1).text     .replace(/^```json\\s*/i, '')     .replace(/^```\\s*/i, '')     .replace(/\\s*```$/i, '')     .trim();    let d = JSON.parse(t);   if (Array.isArray(d)) d = d[0];    return d.reason; })() }}",
+              "type": "string"
+            },
+            {
+              "id": "3302f696-1fc7-453b-965a-9126080da1e8",
+              "name": "random",
+              "value": "={{ Math.random() }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1680,
+        0
+      ],
+      "id": "8bf86754-39eb-439d-a4a2-29f32acecbfd",
+      "name": "приводим данные к правильной структуре"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25c87d7c-c480-429b-9fcf-88e5945966cc",
+              "name": "content_clean",
+              "value": "={{ $json.content.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        432,
+        0
+      ],
+      "id": "2dd6335c-07fa-42e9-ad8a-371d3b4c30f2",
+      "name": "убираем html синтаксис"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b0f5da35-0736-4a4d-b9ed-2fedd6b21e4c",
+              "leftValue": "={{ new Date($json.pubDate).getTime() }}",
+              "rightValue": "={{ Date.now() - 24 * 60 * 60 * 1000 }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        656,
+        0
+      ],
+      "id": "ddbd4d2a-da22-4ef3-871a-a8de74dd5f6d",
+      "name": "фильтруем новости за 24ч"
+    },
+    {
+      "parameters": {
+        "operation": "rowNotExists",
+        "dataTableId": {
+          "__rl": true,
+          "value": "5eEL2dDj6JxnFBNx",
+          "mode": "list",
+          "cachedResultName": "processed_news",
+          "cachedResultUrl": "/projects/MewtMyf9dkGxxA5l/datatables/5eEL2dDj6JxnFBNx"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "link",
+              "keyValue": "={{ $json.link }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "a7a878b9-8042-4914-89ab-a2457007057b",
+      "name": "если ссылка есть - стоп, если нет в нейронку",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6f6e0b7c-edd5-4493-8000-2b62694fa9a7",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1904,
+        0
+      ],
+      "id": "ab77c2a1-9c47-4c79-aa9c-3b6af3679719",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "5eEL2dDj6JxnFBNx",
+          "mode": "list",
+          "cachedResultName": "processed_news",
+          "cachedResultUrl": "/projects/MewtMyf9dkGxxA5l/datatables/5eEL2dDj6JxnFBNx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "=queued",
+            "processed_at": "={{ $now }}",
+            "title_ru": "={{ $json.title_ru }}",
+            "link": "={{ $('убираем html синтаксис').item.json.link }}",
+            "decision": "== KEEP",
+            "score": "={{ $json.score }}",
+            "text_ru": "={{ $json.text_ru }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "decision",
+              "displayName": "decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title_ru",
+              "displayName": "title_ru",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "text_ru",
+              "displayName": "text_ru",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "optimizeBulk": false
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2128,
+        -96
+      ],
+      "id": "6bdabee8-8dce-48f9-bc65-ae793ab178c6",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "5eEL2dDj6JxnFBNx",
+          "mode": "list",
+          "cachedResultName": "processed_news",
+          "cachedResultUrl": "/projects/MewtMyf9dkGxxA5l/datatables/5eEL2dDj6JxnFBNx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "link": "={{ $('убираем html синтаксис').item.json.link }}",
+            "title_ru": "={{ $json.title_ru ?? '' }}",
+            "decision": "== SKIP",
+            "score": "={{ $json.score }}",
+            "processed_at": "== {{ $now }}",
+            "status": "=skipped",
+            "text_ru": "={{ $json.text_ru ?? '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "decision",
+              "displayName": "decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title_ru",
+              "displayName": "title_ru",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "text_ru",
+              "displayName": "text_ru",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2128,
+        96
+      ],
+      "id": "bc6b4cda-29ab-425d-b1b6-d6ba5075e83b",
+      "name": "Insert row1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -16,
+        320
+      ],
+      "id": "1b591c9b-e4ac-4eb9-93ea-c8c9868aab50",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "5eEL2dDj6JxnFBNx",
+          "mode": "list",
+          "cachedResultName": "processed_news",
+          "cachedResultUrl": "/projects/MewtMyf9dkGxxA5l/datatables/5eEL2dDj6JxnFBNx"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "=queued"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        320
+      ],
+      "id": "05181833-8520-4f71-9146-3072229ec8a0",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "news_day",
+              "order": "descending"
+            },
+            {
+              "fieldName": "score",
+              "order": "descending"
+            },
+            {
+              "fieldName": "random",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        672,
+        320
+      ],
+      "id": "61078e7e-63a8-4690-8264-05b95774a35e",
+      "name": "Sort"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        896,
+        320
+      ],
+      "id": "2b4af596-352f-416f-b664-0d02285a1c6e",
+      "name": "выбирается наилучшый score"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "56affa41-4945-4f45-b822-9c925b2faf1f",
+              "name": "random",
+              "value": "={{ Math.random() }}",
+              "type": "number"
+            },
+            {
+              "id": "bbeeaffa-7b39-40f7-a1c4-47af2fac7a23",
+              "name": "score",
+              "value": "={{ $json.score }}",
+              "type": "number"
+            },
+            {
+              "id": "c187d3a7-abf6-4265-a525-f480c706220d",
+              "name": "news_day",
+              "value": "={{ $json.processed_at.slice(0, 12) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        320
+      ],
+      "id": "ed7bd178-ba5d-45c2-a3dc-1d15d633191b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "5eEL2dDj6JxnFBNx",
+          "mode": "list",
+          "cachedResultName": "processed_news",
+          "cachedResultUrl": "/projects/MewtMyf9dkGxxA5l/datatables/5eEL2dDj6JxnFBNx"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "link",
+              "keyValue": "={{ $('выбирается наилучшый score').item.json.link }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "published"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "decision",
+              "displayName": "decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "processed_at",
+              "displayName": "processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "title_ru",
+              "displayName": "title_ru",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "text_ru",
+              "displayName": "text_ru",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        320
+      ],
+      "id": "3d12e4dc-15f7-40f7-add9-485da75a15c0",
+      "name": "Update row(s)"
+    },
+    {
+      "parameters": {
+        "chatId": "@postingtest123321",
+        "text": "={{ $json.title_ru }} {{ $json.text_ru }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        528
+      ],
+      "id": "28b36200-9318-4d1d-ac75-6087a00a8cb0",
+      "name": "Send a text message1",
+      "webhookId": "ee25d15d-9533-4591-865c-1fc58a3e7c4d",
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "WSNhB6nVDNyyFaAX",
+          "name": "Posting"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "@postingtest123321",
+        "file": "https://i.yapx.ru/eJETL.png",
+        "additionalFields": {
+          "caption": "=🎮 {{ $json.title_ru }}  \n\n{{ $json.text_ru }}  "
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        320
+      ],
+      "id": "6a13ec89-7457-4ba7-9045-48200a406ae5",
+      "name": "Send a photo message",
+      "webhookId": "8fc4a175-47ec-43de-bc69-09e23864ae8d",
+      "credentials": {
+        "telegramApi": {
+          "id": "WSNhB6nVDNyyFaAX",
+          "name": "Posting"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "убираем html синтаксис",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "приводим данные к правильной структуре",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "убираем html синтаксис": {
+      "main": [
+        [
+          {
+            "node": "фильтруем новости за 24ч",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "фильтруем новости за 24ч": {
+      "main": [
+        [
+          {
+            "node": "если ссылка есть - стоп, если нет в нейронку",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "если ссылка есть - стоп, если нет в нейронку": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "приводим данные к правильной структуре": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "выбирается наилучшый score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "выбирается наилучшый score": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a photo message": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f1df7b3a-5725-4f51-9c85-81306f075179",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c4fdbc2ac266e8e50b3176a3d958fafad702c27c5086a7a90a29663f619184d6"
+  },
+  "nodeGroups": [],
+  "id": "Jk25b6nrC8fMrFxn",
+  "tags": []
+}
